@@ -1,0 +1,1 @@
+export function Notificacoes() { return <h1>Notificações</h1>; }
