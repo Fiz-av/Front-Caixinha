@@ -14,6 +14,7 @@ import { Notificacoes } from './pages/Notificacoes';
 import { Relatorios } from './pages/Relatorios';
 import { Configuracoes } from './pages/Configuracoes';
 import { CaixinhaDetalhes } from './pages/CaixinhaDetalhes';
+import { Perfil } from './pages/Perfil';
 
 const AppLayout = styled.div`
   display: flex;
@@ -108,6 +109,7 @@ function App() {
                 <Route path="/relatorios" element={<Relatorios />} />
                 <Route path="/configuracoes" element={<Configuracoes currentTheme={theme} toggleTheme={toggleTheme} />} />
                 <Route path="/caixinha/:caixinhaId" element={<CaixinhaDetalhes />} />
+                <Route path="/perfil" element={<Perfil />} />
               </Routes>
             </MainContent>
           </ContentWrapper>

@@ -1,6 +1,6 @@
 // src/components/Sidebar/index.jsx (VERSÃO FINAL COM BOTÃO REPOSICIONADO)
 
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { 
   Container, Header, Logo, Nav, NavItem, Profile, UserInfo, Logout, 
   AppIcon, NavLabel, ToggleButton, Footer
@@ -51,8 +51,7 @@ export function Sidebar({ isOpen, setIsOpen }) {
         </div>
 
         <Footer>
-           {/* O botão de expandir foi removido daqui */}
-          <Profile href="#" $isOpen={isOpen}>
+          <Profile as={Link} to="/perfil" $isOpen={isOpen}> 
             <FaUserCircle size={28} />
             {isOpen && (
               <UserInfo>
@@ -61,7 +60,7 @@ export function Sidebar({ isOpen, setIsOpen }) {
               </UserInfo>
             )}
           </Profile>
-          <Logout href="#" $isOpen={isOpen}>
+          <Logout href="#" $isOpen={isOpen}> 
             <FaSignOutAlt />
             {isOpen && <NavLabel>Sair</NavLabel>}
           </Logout>

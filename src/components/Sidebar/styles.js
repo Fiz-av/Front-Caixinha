@@ -56,7 +56,6 @@ export const AppIcon = styled.div`
   &::before { content: 'C'; }
 `;
 
-// ✅ ESTILOS DO BOTÃO ATUALIZADOS
 export const ToggleButton = styled.button`
   /* Estilos copiados do NavItem para consistência */
   display: flex;
@@ -89,7 +88,6 @@ export const ToggleButton = styled.button`
   }
 `;
 
-
 export const Nav = styled.nav`
   display: flex; flex-direction: column;
   gap: 4px;
@@ -121,6 +119,11 @@ export const Profile = styled.a`
   padding: 16px 0; margin-top: 16px;
   justify-content: ${({ $isOpen }) => ($isOpen ? 'flex-start' : 'center')};
   svg { flex-shrink: 0; color: ${({theme}) => theme.textSecondary}; }
+  border-radius: 8px; color: ${({ theme }) => theme.textSecondary};
+  &:hover { 
+    color: ${({ theme }) => theme.text}; 
+    background-color: ${({ theme }) => theme.background};
+  }
 `;
 
 export const UserInfo = styled.div`
