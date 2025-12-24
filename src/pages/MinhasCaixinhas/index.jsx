@@ -12,7 +12,7 @@ export function MinhasCaixinhas() {
   const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   
-  const [caixinhas, setCaixinhas] = useState(() => {
+  const [caixinhas] = useState(() => {
     const savedCaixinhas = localStorage.getItem('@caixinha:caixinhas');
     
     if (savedCaixinhas) {

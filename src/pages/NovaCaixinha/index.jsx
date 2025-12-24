@@ -7,6 +7,7 @@ import { Button } from '../../components/Button';
 import DatePicker from 'react-datepicker';
 import { enUS, fr, ptBR } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
+import { sanitizePlainText } from '../../utils/inputValidation';
 import { 
   Container, 
   Form, 
@@ -41,11 +42,11 @@ export function NovaCaixinha() {
     // react-datepicker usa padrões do date-fns
     switch (language) {
       case 'en-US':
-        return 'mm / dd / yyyy';
+        return 'MM/dd/yyyy';
       case 'fr-FR':
       case 'pt-BR':
       default:
-        return 'dd / mm / yyyy';
+        return 'dd/MM/yyyy';
     }
   }, [language]);
   
@@ -73,7 +74,10 @@ export function NovaCaixinha() {
   function handleCreateCaixinha(event) {
     event.preventDefault();
 
-    if (!nome) {
+    const nomeSan = sanitizePlainText(nome, { maxLen: 60 });
+    const descricaoSan = sanitizePlainText(descricao, { maxLen: 500, normalize: false });
+
+    if (!nomeSan) {
       return alert(t('alert_name_required'));
     }
 
@@ -81,8 +85,8 @@ export function NovaCaixinha() {
 
     const newCaixinha = {
       id: Date.now(),
-      title: nome,
-      description: descricao,
+      title: nomeSan,
+      description: descricaoSan,
       isOwner: true,
       members: 1,
       totalValue: 0,

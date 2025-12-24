@@ -354,7 +354,7 @@ export function LanguageProvider({ children }) {
             month: '2-digit',
             year: 'numeric'
         }).format(dateObj);
-    } catch (error) {
+  } catch {
         return dateString;
     }
   };
