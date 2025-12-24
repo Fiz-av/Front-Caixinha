@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Container, Title, SectionCard, FormGrid, Actions, DangerZone } from './styles';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 export function Perfil() {
+  const { t } = useLanguage();
   // Estados para os dados do usuário (carregados do localStorage)
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -33,17 +35,17 @@ export function Perfil() {
     event.preventDefault();
     const updatedUser = { name, email, phone };
     localStorage.setItem('@caixinha:user', JSON.stringify(updatedUser));
-    alert('Dados salvos com sucesso! (Simulado)');
+    alert(t('alert_saved'));
     // Atualizar a sidebar? (Avançado)
   };
 
   const handleChangePassword = (event) => {
      event.preventDefault();
      if (newPassword !== confirmPassword) {
-        alert("As novas senhas não coincidem!");
+        alert(t('alert_password_mismatch'));
         return;
      }
-     alert('Senha alterada com sucesso! (Simulado)');
+     alert(t('alert_password_changed'));
      // Limpar campos
      setCurrentPassword('');
      setNewPassword('');
@@ -51,7 +53,7 @@ export function Perfil() {
   };
 
   const handleDeleteAccount = () => {
-    if (window.confirm("TEM CERTEZA? Esta ação é irreversível e excluirá todos os seus dados.")) {
+    if (window.confirm(t('confirm_delete_account'))) {
        alert('Conta excluída com sucesso! (Simulado)');
        // Limpar localStorage e redirecionar para login (Futuro)
     }
@@ -59,44 +61,44 @@ export function Perfil() {
 
   return (
     <Container>
-      <Title>Meu Perfil</Title>
+      <Title>{t('my_profile')}</Title>
 
       {/* --- Seção de Dados Pessoais --- */}
       <SectionCard>
-        <h2>Dados Pessoais</h2>
+        <h2>{t('personal_data')}</h2>
         <FormGrid onSubmit={handleSaveChanges}>
-          <Input label="Nome" value={name} onChange={e => setName(e.target.value)} />
-          <Input label="Telefone" placeholder="(XX) XXXXX-XXXX" value={phone} onChange={e => setPhone(e.target.value)} />
-          <Input label="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} className="full-width" />
+          <Input label={t('name')} value={name} onChange={e => setName(e.target.value)} />
+          <Input label={t('phone')} placeholder="(XX) XXXXX-XXXX" value={phone} onChange={e => setPhone(e.target.value)} />
+          <Input label={t('email')} type="email" value={email} onChange={e => setEmail(e.target.value)} className="full-width" />
           <Actions className="full-width">
-            <Button type="submit">Salvar Alterações</Button>
+            <Button type="submit">{t('save_changes')}</Button>
           </Actions>
         </FormGrid>
       </SectionCard>
 
       {/* --- Seção de Alterar Senha --- */}
       <SectionCard>
-        <h2>Alterar Senha</h2>
+        <h2>{t('change_password')}</h2>
         <FormGrid onSubmit={handleChangePassword}>
-           <Input label="Senha Atual" type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="full-width"/>
-           <Input label="Nova Senha" type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-           <Input label="Confirmar Nova Senha" type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+           <Input label={t('current_password')} type="password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="full-width"/>
+           <Input label={t('new_password')} type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+           <Input label={t('confirm_new_password')} type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
            <Actions className="full-width">
-              <Button type="submit">Alterar Senha</Button>
+              <Button type="submit">{t('change_password')}</Button>
            </Actions>
         </FormGrid>
       </SectionCard>
 
       {/* --- Seção de Excluir Conta --- */}
       <DangerZone>
-        <h2>Excluir Conta</h2>
-        <p>Esta ação é permanente e não pode ser desfeita. Todas as suas caixinhas e dados associados serão removidos.</p>
+        <h2>{t('delete_account')}</h2>
+        <p>{t('delete_account_desc')}</p>
         <Actions>
            <Button 
              onClick={handleDeleteAccount} 
              style={{ backgroundColor: '#dc3545', borderColor: '#dc3545' }}
            >
-             Excluir Minha Conta Permanentemente
+             {t('delete_account_button')}
            </Button>
         </Actions>
       </DangerZone>

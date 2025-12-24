@@ -1,6 +1,7 @@
 // src/pages/Notificacoes/index.jsx 
 
 import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { 
   Container, 
   Title, 
@@ -14,12 +15,13 @@ import {
 } from './styles'; 
 import { NOTIFICACOES_MOCK } from '../../data/notificacoes';
 import { formatDistanceToNow } from 'date-fns'; 
-import { ptBR } from 'date-fns/locale';
+import { ptBR, enUS, fr } from 'date-fns/locale'; // Import fr
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { FaTrash, FaUndo, FaCheckDouble } from 'react-icons/fa';
 
 export function Notificacoes() {
+  const { t, language } = useLanguage(); // Pegue o language do contexto
   const [allNotifications, setAllNotifications] = useState(() => {
     const saved = localStorage.getItem('@caixinha:notificacoes');
     if (saved) return JSON.parse(saved);
@@ -49,7 +51,7 @@ export function Notificacoes() {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm("Excluir esta notificação?")) {
+    if (window.confirm(t('confirm_delete_notification'))) {
       setAllNotifications(prev => prev.filter(notif => notif.id !== id));
     }
   };
@@ -59,33 +61,36 @@ export function Notificacoes() {
   };
 
   const handleClearAll = () => {
-    if (window.confirm("Limpar todas as notificações? Esta ação não pode ser desfeita.")) {
+    if (window.confirm(t('confirm_clear_all'))) {
       setAllNotifications([]);
     }
   };
 
   const unreadCount = allNotifications.filter(n => !n.read).length;
 
+  // Defina o locale do date-fns com base no idioma selecionado
+  const dateLocale = language === 'pt-BR' ? ptBR : (language === 'fr-FR' ? fr : enUS);
+
   return (
     <Container>
       {/* ✅ Using PageHeader correctly */}
       <PageHeader>
-        <Title>Notificações</Title>
+        <Title>{t('notifications_title')}</Title>
         {unreadCount > 0 && <UnreadCount>{unreadCount}</UnreadCount>} 
       </PageHeader>
 
       <ActionsRow>
         <Input 
-          placeholder="Buscar notificação..."
+          placeholder={t('search_notifications_placeholder')}
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
           style={{ flex: 1 }}
         />
         <Button onClick={handleMarkAllRead} disabled={unreadCount === 0} $variant="secondary">
-          <FaCheckDouble /> Marcar todas como lidas
+          <FaCheckDouble /> {t('mark_all_read')}
         </Button>
         <Button onClick={handleClearAll} disabled={allNotifications.length === 0} $variant="secondary" style={{ backgroundColor: '#dc3545', color: 'white', borderColor: '#dc3545' }}> 
-          <FaTrash /> Limpar tudo
+          <FaTrash /> {t('clear_all')}
         </Button>
       </ActionsRow>
 
@@ -99,7 +104,8 @@ export function Notificacoes() {
               <div> 
                 <p>{notification.message}</p>
                 <small>
-                  {formatDistanceToNow(new Date(notification.date), { addSuffix: true, locale: ptBR })}
+                  {/* Use a variável dateLocale aqui */}
+                  {formatDistanceToNow(new Date(notification.date), { addSuffix: true, locale: dateLocale })}
                 </small>
               </div>
               {/* ✅ Using ItemActions and ActionButton correctly */}
@@ -121,7 +127,7 @@ export function Notificacoes() {
           ))}
         </NotificationList>
       ) : (
-        <p style={{ marginTop: '30px', textAlign: 'center' }}>{searchTerm ? 'Nenhuma notificação encontrada.' : 'Nenhuma notificação por enquanto.'}</p>
+        <p style={{ marginTop: '30px', textAlign: 'center' }}>{searchTerm ? t('no_notifications_found') : t('no_notifications_yet')}</p>
       )}
     </Container>
   );

@@ -1,10 +1,12 @@
 // src/pages/Configuracoes/index.jsx
 import { ToggleSwitch } from '../../components/ToggleSwitch';
-import { Container, Title, SettingsCard, CardHeader, CardBody, OptionRow } from './styles';
+import { Container, Title, SettingsCard, CardHeader, CardBody, OptionRow, Select } from './styles';
 import { FaSun, FaMoon, FaGlobe } from 'react-icons/fa';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 // 1. A função agora recebe as props { currentTheme, toggleTheme }
 export function Configuracoes({ currentTheme, toggleTheme }) {
+  const { language, setLanguage, t } = useLanguage();
   
   // 2. 'isDarkMode' agora é dinâmico. 
   // Ele será 'true' se o tema atual for 'dark', e 'false' caso contrário.
@@ -12,19 +14,19 @@ export function Configuracoes({ currentTheme, toggleTheme }) {
 
   return (
     <Container>
-      <h1>Configurações</h1>
-      <p>Personalize sua experiência no Caixinha</p>
+      <h1>{t('settings')}</h1>
+      <p>{t('settings_subtitle')}</p>
 
       <SettingsCard>
         <CardHeader>
           {isDarkMode ? <FaMoon /> : <FaSun />}
-          <h3>Aparência</h3>
+          <h3>{t('appearance')}</h3>
         </CardHeader>
         <CardBody>
           <OptionRow>
             <div>
-              <strong>Modo Escuro</strong>
-              <span>Ative o tema escuro para reduzir o cansaço visual</span>
+              <strong>{t('dark_mode')}</strong>
+              <span>{t('dark_mode_desc')}</span>
             </div>
             
             {/* 3. O ToggleSwitch agora usa os valores dinâmicos.
@@ -39,11 +41,23 @@ export function Configuracoes({ currentTheme, toggleTheme }) {
       <SettingsCard>
         <CardHeader>
           <FaGlobe />
-          <h3>Idioma</h3>
+          <h3>{t('language')}</h3>
         </CardHeader>
         <CardBody>
-          {/* O seletor de idioma será um passo futuro */}
-          <p>Em breve você poderá selecionar outros idiomas.</p>
+          <OptionRow>
+            <div>
+              <strong>{t('select_language')}</strong>
+            </div>
+            <Select 
+              value={language} 
+              onChange={(e) => setLanguage(e.target.value)}
+              $isDarkMode={isDarkMode}
+            >
+              <option value="pt-BR">{t('portuguese')}</option>
+              <option value="en-US">{t('english')}</option>
+              <option value="fr-FR">{t('french')}</option>
+            </Select>
+          </OptionRow>
         </CardBody>
       </SettingsCard>
     </Container>

@@ -1,6 +1,7 @@
 // src/components/Sidebar/index.jsx (VERSÃO FINAL COM BOTÃO REPOSICIONADO)
 
 import { useLocation, Link } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { 
   Container, Header, Logo, Nav, NavItem, Profile, UserInfo, Logout, 
   AppIcon, NavLabel, ToggleButton, Footer
@@ -12,6 +13,7 @@ import {
 
 export function Sidebar({ isOpen, setIsOpen }) { 
   const location = useLocation();
+  const { t } = useLanguage();
 
   return (
     <Container $isOpen={isOpen}> 
@@ -28,24 +30,24 @@ export function Sidebar({ isOpen, setIsOpen }) {
           <ToggleButton onClick={() => setIsOpen(!isOpen)} $isOpen={isOpen}>
             {/* O ícone muda dependendo do estado */}
             {isOpen ? <FaChevronLeft /> : <FaChevronRight />}
-            {isOpen && <NavLabel>Recolher</NavLabel>}
+            {isOpen && <NavLabel>{t('collapse')}</NavLabel>}
           </ToggleButton>
 
           <Nav>
             <NavItem to="/" $active={location.pathname === '/'} $isOpen={isOpen}>
-              <FaBoxes /> {isOpen && <NavLabel>Minhas Caixinhas</NavLabel>}
+              <FaBoxes /> {isOpen && <NavLabel>{t('my_boxes')}</NavLabel>}
             </NavItem>
             <NavItem to="/nova-caixinha" $active={location.pathname === '/nova-caixinha'} $isOpen={isOpen}>
-              <FaPlus /> {isOpen && <NavLabel>Nova Caixinha</NavLabel>}
+              <FaPlus /> {isOpen && <NavLabel>{t('new_box')}</NavLabel>}
             </NavItem>
             <NavItem to="/notificacoes" $active={location.pathname === '/notificacoes'} $isOpen={isOpen}>
-              <FaBell /> {isOpen && <NavLabel>Notificações</NavLabel>}
+              <FaBell /> {isOpen && <NavLabel>{t('notifications')}</NavLabel>}
             </NavItem>
             <NavItem to="/relatorios" $active={location.pathname === '/relatorios'} $isOpen={isOpen}>
-              <FaChartBar /> {isOpen && <NavLabel>Relatórios</NavLabel>}
+              <FaChartBar /> {isOpen && <NavLabel>{t('reports')}</NavLabel>}
             </NavItem>
             <NavItem to="/configuracoes" $active={location.pathname === '/configuracoes'} $isOpen={isOpen}>
-              <FaCog /> {isOpen && <NavLabel>Configurações</NavLabel>}
+              <FaCog /> {isOpen && <NavLabel>{t('settings')}</NavLabel>}
             </NavItem>
           </Nav>
         </div>
@@ -62,7 +64,7 @@ export function Sidebar({ isOpen, setIsOpen }) {
           </Profile>
           <Logout href="#" $isOpen={isOpen}> 
             <FaSignOutAlt />
-            {isOpen && <NavLabel>Sair</NavLabel>}
+            {isOpen && <NavLabel>{t('logout')}</NavLabel>}
           </Logout>
         </Footer>
     </Container>

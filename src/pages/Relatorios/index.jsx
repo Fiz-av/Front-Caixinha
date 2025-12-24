@@ -1,7 +1,8 @@
 // src/pages/Relatorios/index.jsx (Com processamento de dados)
 
 import { Container, Title, ChartContainer } from './styles';
-import { DESPESAS_MOCK } from '../../data/despesas'; // Importa nossos dados de exemplo
+import { DESPESAS_MOCK } from '../../data/despesas'; 
+import { useLanguage } from '../../contexts/LanguageContext';
 
 // Funções e componentes necessários do Chart.js
 import {
@@ -26,6 +27,7 @@ ChartJS.register(
 );
 
 export function Relatorios() {
+  const { t, language } = useLanguage(); // Pegamos o language do contexto
   
   // --- LÓGICA DE PROCESSAMENTO DOS DADOS ---
   const monthlyTotals = DESPESAS_MOCK.reduce((acc, expense) => {
@@ -51,12 +53,17 @@ export function Relatorios() {
     labels: sortedMonths.map(month => {
       // Formata "2025-10" para "Out/2025" (Exemplo)
       const [year, monthNum] = month.split('-');
-      const monthName = new Date(year, monthNum - 1, 1).toLocaleString('pt-BR', { month: 'short' });
-      return `${monthName.charAt(0).toUpperCase() + monthName.slice(1)}/${year}`;
+      
+      const dateObj = new Date(year, monthNum - 1, 1);
+      // Formata Mês/Ano ou Ano/Mês dependendo do locale
+      let label = dateObj.toLocaleString(language, { month: 'short', year: 'numeric' });
+      
+      // Capitaliza a primeira letra (opcional, mas bom para pt-BR)
+      return label.charAt(0).toUpperCase() + label.slice(1);
     }),
     datasets: [
       {
-        label: 'Total Gasto (R$)',
+        label: t('total_spent'),
         data: sortedMonths.map(month => monthlyTotals[month]),
         backgroundColor: 'rgba(108, 99, 255, 0.6)', // Cor das barras (nosso roxo primário com transparência)
         borderColor: 'rgba(108, 99, 255, 1)',
@@ -86,9 +93,9 @@ export function Relatorios() {
   // --- RENDERIZAÇÃO ---
   return (
     <Container>
-      <Title>Relatórios</Title>
+      <Title>{t('reports_title')}</Title>
       <ChartContainer>
-        <h2>Total de Gastos por Mês</h2>
+        <h2>{t('total_expenses_month')}</h2>
         {/* ✅ Renderiza o componente Bar com os dados e opções */}
         <Bar options={chartOptions} data={chartData} />
       </ChartContainer>

@@ -47,3 +47,21 @@ export const OptionRow = styled.div`
     }
   }
 `;
+
+export const Select = styled.select`
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.border};
+  
+  /* Ajuste para garantir visibilidade no modo escuro: fundo claro e texto escuro */
+  background-color: ${({ theme, $isDarkMode }) => $isDarkMode ? '#f0f0f5' : theme.background};
+  color: ${({ theme, $isDarkMode }) => $isDarkMode ? '#121214' : theme.textPrimary};
+  
+  font-size: 14px;
+  outline: none;
+  cursor: pointer;
+
+  &:focus {
+    border-color: ${({ theme }) => theme.primary};
+  }
+`;

@@ -6,6 +6,7 @@ import { useTheme } from './hooks/useTheme';
 import { lightTheme, darkTheme, GlobalStyle } from './styles/global';
 import { Sidebar } from './components/Sidebar';
 import { FaBars } from 'react-icons/fa';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 // Importando todas as páginas
 import { MinhasCaixinhas } from './pages/MinhasCaixinhas';
@@ -93,27 +94,29 @@ function App() {
     <ThemeProvider theme={currentTheme}>
       <GlobalStyle />
       <BrowserRouter>
-        <AppLayout>
-          <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-          <Overlay $isSidebarOpen={isSidebarOpen} onClick={() => setIsSidebarOpen(false)} />
-          <ContentWrapper>
-            <MobileHeader>
-              <HamburgerButton onClick={() => setIsSidebarOpen(true)}><FaBars /></HamburgerButton>
-              {/* Você pode adicionar a logo aqui se quiser */}
-            </MobileHeader>
-            <MainContent $isSidebarOpen={isSidebarOpen}>
-              <Routes>
-                <Route path="/" element={<MinhasCaixinhas />} />
-                <Route path="/nova-caixinha" element={<NovaCaixinha />} />
-                <Route path="/notificacoes" element={<Notificacoes />} />
-                <Route path="/relatorios" element={<Relatorios />} />
-                <Route path="/configuracoes" element={<Configuracoes currentTheme={theme} toggleTheme={toggleTheme} />} />
-                <Route path="/caixinha/:caixinhaId" element={<CaixinhaDetalhes />} />
-                <Route path="/perfil" element={<Perfil />} />
-              </Routes>
-            </MainContent>
-          </ContentWrapper>
-        </AppLayout>
+        <LanguageProvider>
+          <AppLayout>
+            <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
+            <Overlay $isSidebarOpen={isSidebarOpen} onClick={() => setIsSidebarOpen(false)} />
+            <ContentWrapper>
+              <MobileHeader>
+                <HamburgerButton onClick={() => setIsSidebarOpen(true)}><FaBars /></HamburgerButton>
+                {/* Você pode adicionar a logo aqui se quiser */}
+              </MobileHeader>
+              <MainContent $isSidebarOpen={isSidebarOpen}>
+                <Routes>
+                  <Route path="/" element={<MinhasCaixinhas />} />
+                  <Route path="/nova-caixinha" element={<NovaCaixinha />} />
+                  <Route path="/notificacoes" element={<Notificacoes />} />
+                  <Route path="/relatorios" element={<Relatorios />} />
+                  <Route path="/configuracoes" element={<Configuracoes currentTheme={theme} toggleTheme={toggleTheme} />} />
+                  <Route path="/caixinha/:caixinhaId" element={<CaixinhaDetalhes />} />
+                  <Route path="/perfil" element={<Perfil />} />
+                </Routes>
+              </MainContent>
+            </ContentWrapper>
+          </AppLayout>
+        </LanguageProvider>
       </BrowserRouter>
     </ThemeProvider>
   );

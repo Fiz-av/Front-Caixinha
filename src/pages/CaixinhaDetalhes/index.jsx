@@ -1,6 +1,7 @@
 // src/pages/CaixinhaDetalhes/index.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useLanguage } from '../../contexts/LanguageContext';
 import { CAIXINHAS_MOCK } from '../../data/caixinhas';
 import { DESPESAS_MOCK } from '../../data/despesas';
 import { Button } from '../../components/Button';
@@ -22,6 +23,7 @@ import {
 import { FaArrowLeft, FaUserFriends } from 'react-icons/fa'; // Importa o ícone de amigos
 
 export function CaixinhaDetalhes() {
+  const { t, formatDate } = useLanguage(); // Pegamos formatDate do contexto
   const { caixinhaId } = useParams();
   const [isNewExpenseModalOpen, setIsNewExpenseModalOpen] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null); // ✅ Estado para edição
@@ -63,7 +65,7 @@ export function CaixinhaDetalhes() {
   function handleAddNewExpense(event) {
     event.preventDefault();
     if (!newDescription || !newAmount) {
-      alert('Por favor, preencha todos os campos.');
+      alert(t('fill_all_fields'));
       return;
     }
 
@@ -81,7 +83,7 @@ export function CaixinhaDetalhes() {
   }
 
   function handleDeleteExpense(expenseId) {
-    if (window.confirm("Tem certeza que deseja excluir esta despesa?")) {
+    if (window.confirm(t('confirm_delete_expense'))) {
       setDespesas(prevState => prevState.filter(d => d.id !== expenseId));
     }
   }
@@ -99,8 +101,8 @@ export function CaixinhaDetalhes() {
   if (!caixinha) {
     return (
       <Container>
-        <h1>Caixinha não encontrada!</h1>
-        <Link to="/">Voltar para a página inicial</Link>
+        <h1>{t('box_not_found')}</h1>
+        <Link to="/">{t('back_home')}</Link>
       </Container>
     );
   }
@@ -108,48 +110,48 @@ export function CaixinhaDetalhes() {
   return (
     <Container>
       <Modal 
-        title="Adicionar Nova Despesa"
+        title={t('add_new_expense_modal')}
         visible={isNewExpenseModalOpen}
         onClose={handleCloseNewExpenseModal}
       >
         <form onSubmit={handleAddNewExpense} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <Input 
-            label="Descrição" 
+            label={t('description')} 
             placeholder="Ex: Jantar, Gasolina..."
             value={newDescription}
             onChange={e => setNewDescription(e.target.value)}
           />
           <Input 
-            label="Valor" 
+            label={t('amount')} 
             type="number" 
             placeholder="R$ 0,00"
             step="0.01"
             value={newAmount}
             onChange={e => setNewAmount(e.target.value)}
           />
-          <Button type="submit">Salvar Despesa</Button>
+          <Button type="submit">{t('save_expense')}</Button>
         </form>
       </Modal>
 
       <Modal
-        title="Editar Despesa"
+        title={t('edit_expense_modal')}
         visible={!!editingExpense}
         onClose={handleCloseEditModal}
       >
         <form onSubmit={handleUpdateExpense} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <Input 
-            label="Descrição" 
+            label={t('description')} 
             value={editDescription}
             onChange={e => setEditDescription(e.target.value)}
           />
           <Input 
-            label="Valor" 
+            label={t('amount')} 
             type="number"
             step="0.01"
             value={editAmount}
             onChange={e => setEditAmount(e.target.value)}
           />
-          <Button type="submit">Salvar Alterações</Button>
+          <Button type="submit">{t('save_changes')}</Button>
         </form>
       </Modal>
 
@@ -166,10 +168,10 @@ export function CaixinhaDetalhes() {
 
         <HeaderActions>
           {/* O botão de adicionar despesa fica aqui agora */}
-          <Button onClick={handleOpenNewExpenseModal}>+ Adicionar Despesa</Button>
+          <Button onClick={handleOpenNewExpenseModal}>+ {t('add_expense')}</Button>
           {/* Novo botão de convidar membros */}
           <Button $variant="secondary">
-            <FaUserFriends /> Convidar Membros
+            <FaUserFriends /> {t('invite_members')}
           </Button>
         </HeaderActions>
       </Header>
@@ -179,13 +181,19 @@ export function CaixinhaDetalhes() {
           despesas.map(despesa => (
             <ExpenseListItem 
               key={despesa.id} 
-              data={despesa}
+              data={{
+                ...despesa,
+                // Sobrescrevemos a data visualmente com a versão formatada
+                // Mantemos a originalDate caso o componente precise (opcional)
+                originalDate: despesa.date,
+                date: formatDate(despesa.date)
+              }}
               onDelete={handleDeleteExpense} // Passando a função de deletar
               onEdit={handleOpenEditModal}   // Passando a função de editar
             />
           ))
         ) : (
-          <p>Nenhuma despesa foi adicionada ainda.</p>
+          <p>{t('no_expenses')}</p>
         )}
       </DespesasList>
     </Container>
